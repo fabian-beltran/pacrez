@@ -1,5 +1,5 @@
-import theme from "@/lib/theme";
-import { MantineProvider, ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
+import LayoutShell from "@/components/LayoutShell";
+import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import "@mantine/core/styles.css";
 import type { Metadata } from "next";
 
@@ -21,7 +21,7 @@ export default function RootLayout({
 				<ColorSchemeScript />
 			</head>
 			<body>
-				<MantineProvider theme={theme}>{children}</MantineProvider>
+				<LayoutShell>{children}</LayoutShell>
 			</body>
 		</html>
 	);
