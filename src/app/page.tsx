@@ -2,11 +2,12 @@
 import { Button, Center, Grid, PasswordInput, Stack, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
+import Link from "next/link";
 import * as z from "zod";
 
 const loginSchema = z.object({
 	email: z.email("Invalid email address").regex(/@.*\.?pacific\.edu$/, "Must use your Pacific email"),
-	password: z.string().min(6, "Password must be at least 6 characters"),
+	password: z.string(),
 });
 
 export default function Home() {
@@ -36,7 +37,7 @@ export default function Home() {
 							</Button>
 						</Grid.Col>
 						<Grid.Col span={5}>
-							<Button variant="outline" fullWidth>
+							<Button variant="outline" fullWidth component={Link} href="/register">
 								Register
 							</Button>
 						</Grid.Col>
