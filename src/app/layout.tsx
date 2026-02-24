@@ -1,6 +1,7 @@
 import LayoutShell from "@/components/LayoutShell";
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
