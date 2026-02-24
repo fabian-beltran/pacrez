@@ -2,6 +2,7 @@
 import { MantineProvider, AppShell, Space } from "@mantine/core";
 import AppHeader from "@/components/AppHeader";
 import theme from "@/lib/theme";
+import Navbar from "./Navbar";
 
 const LayoutShell = ({
 	children,
@@ -22,7 +23,9 @@ const LayoutShell = ({
 					<AppHeader />
 				</AppShell.Header>
 
-				<AppShell.Navbar>Navbar</AppShell.Navbar>
+				<AppShell.Navbar>
+					<Navbar />
+				</AppShell.Navbar>
 
 				<AppShell.Main>
 					<Space h="xl" />

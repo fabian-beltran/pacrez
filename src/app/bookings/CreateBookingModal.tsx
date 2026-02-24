@@ -38,16 +38,6 @@ const CreateBookingModal = () => {
 					</Group>
 
 					<Select
-						label="Term"
-						placeholder="Select a term"
-						data={[
-							{ value: "spring-2026", label: "Spring 2026" },
-							{ value: "summer-2026", label: "Summer 2026" },
-							{ value: "fall-2026", label: "Fall 2026" },
-						]}
-					/>
-
-					<Select
 						label="Booking Type"
 						placeholder="Select a type"
 						data={[
