@@ -1,13 +1,31 @@
-import { NavLink } from "@mantine/core";
+import { Box, NavLink } from "@mantine/core";
 import { IconList, IconMap } from "@tabler/icons-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const NavButton = ({ label, icon, href }: { label: string; icon: React.ReactElement; href: string }) => {
+	const pathname = usePathname();
+	const active = pathname === href;
+	return (
+		<NavLink
+			label={label}
+			py="sm"
+			mb={6}
+			style={{ borderRadius: 6 }}
+			leftSection={icon}
+			component={Link}
+			href={href}
+			active={active}
+		/>
+	);
+};
 
 const Navbar = () => {
 	return (
-		<>
-			<NavLink label="Bookings" py="md" leftSection={<IconList />} component={Link} href="/bookings" />
-			<NavLink label="Campus Map" py="md" leftSection={<IconMap />} component={Link} href="/map" />
-		</>
+		<Box p="xs">
+			<NavButton label="Bookings" icon={<IconList />} href="/bookings" />
+			<NavButton label="Campus Map" icon={<IconMap />} href="/map" />
+		</Box>
 	);
 };
 

@@ -27,10 +27,7 @@ const LayoutShell = ({
 					<Navbar />
 				</AppShell.Navbar>
 
-				<AppShell.Main>
-					<Space h="xl" />
-					{children}
-				</AppShell.Main>
+				<AppShell.Main>{children}</AppShell.Main>
 			</AppShell>
 		</MantineProvider>
 	);
