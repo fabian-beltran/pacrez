@@ -25,6 +25,14 @@ enum ReservationStatus {
   CANCELLED
 }
 
+enum ReservationType {
+  STUDY
+  MEETING
+  EVENT
+  CLASS
+}
+
+
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
@@ -62,6 +70,13 @@ model Reservation {
 
   startTime DateTime
   endTime   DateTime
+  type ReservationType
+  anticipatedAttendance Int
+  purpose String
+  suppliesNeeded String?
+  contactName String
+  contactEmail String
+  contactPhone String
 
   status    ReservationStatus @default(PENDING)
 

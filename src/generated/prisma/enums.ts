@@ -25,3 +25,13 @@ export const ReservationStatus = {
 } as const
 
 export type ReservationStatus = (typeof ReservationStatus)[keyof typeof ReservationStatus]
+
+
+export const ReservationType = {
+  STUDY: 'STUDY',
+  MEETING: 'MEETING',
+  EVENT: 'EVENT',
+  CLASS: 'CLASS'
+} as const
+
+export type ReservationType = (typeof ReservationType)[keyof typeof ReservationType]

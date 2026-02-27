@@ -104,6 +104,13 @@ export const ReservationScalarFieldEnum = {
   roomId: 'roomId',
   startTime: 'startTime',
   endTime: 'endTime',
+  type: 'type',
+  anticipatedAttendance: 'anticipatedAttendance',
+  purpose: 'purpose',
+  suppliesNeeded: 'suppliesNeeded',
+  contactName: 'contactName',
+  contactEmail: 'contactEmail',
+  contactPhone: 'contactPhone',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

@@ -1,5 +1,5 @@
 "use client";
-import { MantineProvider, AppShell, Space } from "@mantine/core";
+import { MantineProvider, AppShell, Container } from "@mantine/core";
 import AppHeader from "@/components/AppHeader";
 import theme from "@/lib/theme";
 import Navbar from "./Navbar";
@@ -15,7 +15,7 @@ const LayoutShell = ({
 				padding="md"
 				header={{ height: 70 }}
 				navbar={{
-					width: 200,
+					width: 240,
 					breakpoint: "sm",
 				}}
 			>
@@ -27,7 +27,9 @@ const LayoutShell = ({
 					<Navbar />
 				</AppShell.Navbar>
 
-				<AppShell.Main>{children}</AppShell.Main>
+				<AppShell.Main>
+					<Container size="xl">{children}</Container>
+				</AppShell.Main>
 			</AppShell>
 		</MantineProvider>
 	);

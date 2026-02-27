@@ -1,5 +1,5 @@
 import { Box, Divider, NavLink } from "@mantine/core";
-import { IconList, IconMap, IconLogin } from "@tabler/icons-react";
+import { IconList, IconMap, IconLogin, IconLayoutDashboard } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -25,6 +25,7 @@ const Navbar = () => {
 		<Box p="xs">
 			<NavButton label="Bookings" icon={<IconList />} href="/bookings" />
 			<NavButton label="Campus Map" icon={<IconMap />} href="/map" />
+			<NavButton label="Admin" icon={<IconLayoutDashboard />} href="/admin" />
 			<Divider my={12} />
 			<NavButton label="Login" icon={<IconLogin />} href="/" />
 		</Box>

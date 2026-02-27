@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.3.0
- * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
+ * Prisma Client JS version: 7.4.2
+ * Query Engine version: 94a226be1cf2967af2541cca5529f0f7ba866919
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.3.0",
-  engine: "9d6ad21cbbceab97458517b147a6a09ff43aa735"
+  client: "7.4.2",
+  engine: "94a226be1cf2967af2541cca5529f0f7ba866919"
 }
 
 /**
@@ -773,6 +773,13 @@ export const ReservationScalarFieldEnum = {
   roomId: 'roomId',
   startTime: 'startTime',
   endTime: 'endTime',
+  type: 'type',
+  anticipatedAttendance: 'anticipatedAttendance',
+  purpose: 'purpose',
+  suppliesNeeded: 'suppliesNeeded',
+  contactName: 'contactName',
+  contactEmail: 'contactEmail',
+  contactPhone: 'contactPhone',
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -872,6 +879,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ReservationType'
+ */
+export type EnumReservationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReservationType'>
+    
+
+
+/**
+ * Reference to a field of type 'ReservationType[]'
+ */
+export type ListEnumReservationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReservationType[]'>
     
 
 

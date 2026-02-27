@@ -15,7 +15,7 @@
 		"@mantine/form": "^8.3.14",
 		"@mantine/hooks": "^8.3.14",
 		"@prisma/adapter-pg": "^7.3.0",
-		"@prisma/client": "^7.4.0",
+		"@prisma/client": "^7.4.2",
 		"@tabler/icons-react": "^3.37.1",
 		"dayjs": "^1.11.19",
 		"dotenv": "^17.2.4",
@@ -37,7 +37,7 @@
 		"eslint-config-next": "16.1.6",
 		"eslint-config-prettier": "^10.1.8",
 		"prettier": "^3.8.1",
-		"prisma": "^7.4.0",
+		"prisma": "^7.4.2",
 		"tailwindcss": "^4",
 		"tsx": "^4.21.0",
 		"typescript": "^5"
