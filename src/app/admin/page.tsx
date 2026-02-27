@@ -1,6 +1,6 @@
 import { Text, Paper, SimpleGrid, Title } from "@mantine/core";
 import React from "react";
-import BookingsTable from "../bookings/BookingsTable";
+import BookingsTable from "../reservations/ReservationsTable";
 
 const StatCard = ({ label, value }: { label: string; value: string }) => {
 	return (

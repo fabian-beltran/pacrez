@@ -23,7 +23,7 @@ const NavButton = ({ label, icon, href }: { label: string; icon: React.ReactElem
 const Navbar = () => {
 	return (
 		<Box p="xs">
-			<NavButton label="Bookings" icon={<IconList />} href="/bookings" />
+			<NavButton label="Reservations" icon={<IconList />} href="/reservations" />
 			<NavButton label="Campus Map" icon={<IconMap />} href="/map" />
 			<NavButton label="Admin" icon={<IconLayoutDashboard />} href="/admin" />
 			<Divider my={12} />
