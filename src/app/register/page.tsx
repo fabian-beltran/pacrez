@@ -19,7 +19,7 @@ const registerSchema = z
 		path: ["confirmPassword"], // show error under confirm field
 	});
 
-const RegisterPage = () => {
+export default function RegisterPage() {
 	const form = useForm({
 		initialValues: {
 			firstName: "",
@@ -58,6 +58,4 @@ const RegisterPage = () => {
 			</form>
 		</Center>
 	);
-};
-
-export default RegisterPage;
+}

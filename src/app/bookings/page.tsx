@@ -4,7 +4,7 @@ import { Title } from "@mantine/core";
 import BookingsTable from "./BookingsTable";
 import CreateBookingModal from "./CreateBookingModal";
 
-const BookPage = () => {
+export default function BookPage() {
 	return (
 		<>
 			<Title mb="md">Your Reservations</Title>
@@ -12,6 +12,4 @@ const BookPage = () => {
 			<BookingsTable />
 		</>
 	);
-};
-
-export default BookPage;
+}
