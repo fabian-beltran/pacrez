@@ -1,25 +1,28 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "@mantine/form";
-import { Button, Center, Group, PasswordInput, Stack, TextInput, Title, Text, UnstyledButton } from "@mantine/core";
-import * as z from "zod";
+import {
+	Button,
+	Center,
+	Group,
+	PasswordInput,
+	Stack,
+	TextInput,
+	Title,
+	Text,
+	UnstyledButton,
+	Alert,
+} from "@mantine/core";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import Link from "next/link";
-
-const registerSchema = z
-	.object({
-		firstName: z.string(),
-		lastName: z.string(),
-		email: z.email("Invalid email address").regex(/@.*\.?pacific\.edu$/, "Must use your Pacific email"),
-		password: z.string().min(6, "Password must be at least 6 characters"),
-		confirmPassword: z.string().min(1, "Please confirm your password"),
-	})
-	.refine((data) => data.password === data.confirmPassword, {
-		message: "Passwords do not match",
-		path: ["confirmPassword"], // show error under confirm field
-	});
+import { registerSchemaClient as registerSchema } from "@/lib/schemas/auth";
+import { registerAction } from "@/lib/server-actions/auth";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
+	const [loading, setLoading] = useState(false);
+	const [errorMessage, setErrorMessage] = useState("");
+	const router = useRouter();
 	const form = useForm({
 		initialValues: {
 			firstName: "",
@@ -31,8 +34,24 @@ export default function RegisterPage() {
 		validate: zod4Resolver(registerSchema),
 	});
 
-	const handleSubmit = (values: typeof form.values) => {
-		console.log("Login values:", values);
+	const handleSubmit = async ({ firstName, lastName, email, password }: typeof form.values) => {
+		try {
+			setLoading(true);
+			const result = await registerAction({
+				firstName,
+				lastName,
+				email,
+				password,
+			});
+			console.log(result);
+			router.push("/");
+		} catch (error) {
+			if (!(error instanceof Error)) return;
+			console.error(error);
+			setErrorMessage(error.message);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -47,13 +66,16 @@ export default function RegisterPage() {
 					<TextInput label="Email" {...form.getInputProps("email")} />
 					<PasswordInput label="Password" {...form.getInputProps("password")} />
 					<PasswordInput label="Confirm Password" {...form.getInputProps("confirmPassword")} />
-					<Button type="submit">Create Account</Button>
+					<Button type="submit" loading={loading}>
+						Create Account
+					</Button>
 					<Text ta="right">
 						Already have an account?{" "}
 						<UnstyledButton c="brand" fw="bold" component={Link} href="/">
 							Login
 						</UnstyledButton>
 					</Text>
+					{errorMessage && <Alert color="red">{errorMessage}</Alert>}
 				</Stack>
 			</form>
 		</Center>
