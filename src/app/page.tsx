@@ -1,9 +1,12 @@
 "use client";
-import { Button, Center, Grid, PasswordInput, Stack, TextInput, Title } from "@mantine/core";
+import { Alert, Button, Center, Grid, PasswordInput, Stack, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import Link from "next/link";
 import * as z from "zod";
+import { loginAction } from "@/lib/server-actions/auth";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
 	email: z.email("Invalid email address").regex(/@.*\.?pacific\.edu$/, "Must use your Pacific email"),
@@ -11,6 +14,9 @@ const loginSchema = z.object({
 });
 
 export default function Home() {
+	const router = useRouter();
+	const [loading, setLoading] = useState(false);
+	const [errorMessage, setErrorMessage] = useState("");
 	const form = useForm({
 		initialValues: {
 			email: "",
@@ -19,8 +25,19 @@ export default function Home() {
 		validate: zod4Resolver(loginSchema),
 	});
 
-	const handleSubmit = (values: typeof form.values) => {
-		console.log("Login values:", values);
+	const handleSubmit = async ({ email, password }: typeof form.values) => {
+		try {
+			setLoading(true);
+			const result = await loginAction({ email, password });
+			console.log(result);
+			router.push("/reservations");
+		} catch (error) {
+			if (!(error instanceof Error)) return;
+			console.error(error);
+			setErrorMessage(error.message);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -32,7 +49,7 @@ export default function Home() {
 					<PasswordInput label="Password" {...form.getInputProps("password")} />
 					<Grid>
 						<Grid.Col span={7}>
-							<Button fullWidth type="submit">
+							<Button fullWidth type="submit" loading={loading}>
 								Login
 							</Button>
 						</Grid.Col>
@@ -42,6 +59,7 @@ export default function Home() {
 							</Button>
 						</Grid.Col>
 					</Grid>
+					{errorMessage && <Alert color="red">{errorMessage}</Alert>}
 				</Stack>
 			</form>
 		</Center>
