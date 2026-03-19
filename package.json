@@ -9,6 +9,9 @@
 		"lint": "eslint",
 		"lint:fix": "eslint --fix"
 	},
+	"prisma": {
+		"seed": "tsx ./prisma/seed.ts"
+	},
 	"dependencies": {
 		"@mantine/core": "^8.3.14",
 		"@mantine/dates": "^8.3.14",

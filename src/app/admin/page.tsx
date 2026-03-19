@@ -1,5 +1,4 @@
 import { Text, Paper, SimpleGrid, Title } from "@mantine/core";
-import React from "react";
 import BookingsTable from "../(auth)/reservations/ReservationsTable";
 import { requireUser } from "@/lib/helpers/authHelpers";
 
