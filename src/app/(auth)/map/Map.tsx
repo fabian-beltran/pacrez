@@ -1,5 +1,4 @@
 "use client";
-
 import { ActionIcon, Box, Stack, UnstyledButton } from "@mantine/core";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import Image from "next/image";
@@ -42,7 +41,7 @@ const MapButton = ({ label, top, left }: { label: string; top: string; left: str
 	);
 };
 
-export default function CampusMap() {
+export default function Map() {
 	return (
 		<Box pos="relative">
 			<TransformWrapper initialScale={3} minScale={1} maxScale={10} centerOnInit centerZoomedOut>

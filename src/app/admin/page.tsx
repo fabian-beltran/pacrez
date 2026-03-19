@@ -1,6 +1,7 @@
 import { Text, Paper, SimpleGrid, Title } from "@mantine/core";
 import React from "react";
-import BookingsTable from "../reservations/ReservationsTable";
+import BookingsTable from "../(auth)/reservations/ReservationsTable";
+import { requireUser } from "@/lib/helpers/authHelpers";
 
 const StatCard = ({ label, value }: { label: string; value: string }) => {
 	return (
@@ -15,7 +16,9 @@ const StatCard = ({ label, value }: { label: string; value: string }) => {
 	);
 };
 
-export default function AdminPage() {
+export default async function AdminPage() {
+	await requireUser("/", ["ADMIN"]);
+
 	return (
 		<>
 			<SimpleGrid cols={{ base: 1, lg: 4 }} mb="lg">
