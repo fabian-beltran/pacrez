@@ -16,7 +16,7 @@ import {
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import Link from "next/link";
 import { registerSchemaClient as registerSchema } from "@/lib/schemas/auth";
-import { registerAction } from "@/lib/server-actions/auth";
+import { registerAction } from "@/server-actions/auth";
 import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {

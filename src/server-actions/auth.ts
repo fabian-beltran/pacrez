@@ -4,8 +4,8 @@ import { z } from "zod";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
-import { sign } from "jsonwebtoken";
-import { registerSchema } from "../schemas/auth";
+import { sign, verify } from "jsonwebtoken";
+import { registerSchema } from "@/lib/schemas/auth";
 import { Role } from "@/generated/prisma/enums";
 
 export const loginAction = async (formData: { email: string; password: string }) => {
@@ -86,4 +86,26 @@ export const registerAction = async (formData: {
 	});
 
 	return { success: true, userId: user.id };
+};
+
+export const getCurrentUser = async () => {
+	const cookieStore = await cookies();
+	const token = cookieStore.get("auth_token")?.value;
+	if (!token) return null;
+
+	try {
+		const payload = verify(token, process.env.JWT_SECRET!) as { userId: string };
+		const user = await prisma.user.findUnique({ where: { id: payload.userId } });
+		return user;
+	} catch {
+		return null;
+	}
+};
+
+export const logoutAction = async () => {
+	const cookieStore = await cookies();
+
+	cookieStore.delete({ name: "auth_token", path: "/" });
+
+	return { success: true };
 };

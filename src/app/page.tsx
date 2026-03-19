@@ -4,7 +4,7 @@ import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import Link from "next/link";
 import * as z from "zod";
-import { loginAction } from "@/lib/server-actions/auth";
+import { loginAction } from "@/server-actions/auth";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
