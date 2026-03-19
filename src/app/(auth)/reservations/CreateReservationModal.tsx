@@ -39,7 +39,6 @@ const reservationTypeOptions = Object.values(ReservationType).map((type) => ({
 
 const CreateReservationModal = ({ buildings }: { buildings: (Building & { rooms: Room[] })[] }) => {
 	const [opened, { open, close }] = useDisclosure(false);
-
 	const form = useForm({
 		initialValues: {
 			building: "",
@@ -75,8 +74,21 @@ const CreateReservationModal = ({ buildings }: { buildings: (Building & { rooms:
 							placeholder="Select a building"
 							data={buildings.map((b) => b.name)}
 							{...form.getInputProps("building")}
+							onChange={(value) => {
+								form.setFieldValue("building", value);
+								form.setFieldValue("room", "");
+							}}
 						/>
-						<Autocomplete label="Room" placeholder="Select a room" {...form.getInputProps("room")} />
+
+						<Autocomplete
+							label="Room"
+							placeholder="Select a room"
+							data={
+								buildings.find((b) => b.name === form.values.building)?.rooms.map((r) => r.name) ?? []
+							}
+							disabled={!form.values.building}
+							{...form.getInputProps("room")}
+						/>
 
 						<Group grow>
 							<DateTimePicker label="Start Time" {...form.getInputProps("startTime")} />
