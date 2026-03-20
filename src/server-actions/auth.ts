@@ -102,6 +102,13 @@ export const getCurrentUser = async () => {
 	}
 };
 
+export const requireUser = async () => {
+	const user = await getCurrentUser();
+	if (!user) throw new Error("Not logged in.");
+
+	return user;
+};
+
 export const logoutAction = async () => {
 	const cookieStore = await cookies();
 
