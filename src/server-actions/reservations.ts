@@ -1,7 +1,7 @@
 "use server";
 import { ReservationType } from "@/generated/prisma/enums";
 import prisma from "@/lib/prisma";
-import { CreateReservationInput } from "@/lib/schemas/reservations";
+import { ReservationInput } from "@/lib/schemas/reservations";
 import { requireUser } from "./auth";
 
 export const createReservation = async ({
@@ -16,7 +16,7 @@ export const createReservation = async ({
 	contactName,
 	contactEmail,
 	contactPhone,
-}: CreateReservationInput) => {
+}: ReservationInput) => {
 	console.log(startTime, endTime);
 	const user = await requireUser();
 
@@ -63,4 +63,50 @@ export const getReservations = async (all?: boolean) => {
 	});
 
 	return reservations;
+};
+
+export const updateReservation = async (
+	reservationId: string,
+	{
+		startTime,
+		endTime,
+		reservationType,
+		anticipatedAttendance,
+		purpose,
+		suppliesNeeded,
+		contactName,
+		contactEmail,
+		contactPhone,
+	}: ReservationInput
+) => {
+	const user = await requireUser();
+
+	const existingReservation = await prisma.reservation.findUnique({
+		where: { id: reservationId },
+	});
+
+	if (!existingReservation) {
+		throw new Error("Reservation not found.");
+	}
+
+	if (existingReservation.userId !== user.id && user.role !== "ADMIN") {
+		throw new Error("Unauthorized.");
+	}
+
+	const reservation = await prisma.reservation.update({
+		where: { id: reservationId },
+		data: {
+			startTime: new Date(startTime),
+			endTime: new Date(endTime),
+			type: reservationType as ReservationType,
+			anticipatedAttendance,
+			purpose,
+			suppliesNeeded,
+			contactName,
+			contactEmail,
+			contactPhone,
+		},
+	});
+
+	return { success: true, reservationId: reservation.id };
 };

@@ -18,9 +18,9 @@ import { Building, Room, ReservationType } from "@/generated/prisma/browser";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useForm } from "@mantine/form";
 import { ReservationInput, reservationSchema } from "@/lib/schemas/reservations";
-import { createReservation } from "@/server-actions/reservations";
+import { createReservation, updateReservation } from "@/server-actions/reservations";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { IconEye } from "@tabler/icons-react";
 import { ReservationGetPayload } from "@/generated/prisma/models";
 
@@ -51,8 +51,8 @@ const ReservationModal = ({
 }) => {
 	const { start, end } = getDefaultTimes();
 	const router = useRouter();
-	const [opened, { open, close }] = useDisclosure(false, { onClose: () => form.reset() });
-	const [loading, startTransition] = useTransition();
+	const [opened, { open, close }] = useDisclosure(false, { onClose: () => !reservation && form.reset() });
+	const [isPending, startTransition] = useTransition();
 	const form = useForm<ReservationInput>({
 		initialValues: {
 			buildingName: "",
@@ -73,7 +73,11 @@ const ReservationModal = ({
 	const handleSubmit = async (values: ReservationInput) => {
 		startTransition(async () => {
 			try {
-				await createReservation(values);
+				if (!reservation) {
+					await createReservation(values);
+				} else {
+					await updateReservation(reservation.id, values);
+				}
 				close();
 				router.refresh();
 			} catch (error) {
@@ -81,6 +85,25 @@ const ReservationModal = ({
 			}
 		});
 	};
+
+	useEffect(() => {
+		if (reservation) {
+			form.setValues({
+				buildingName: reservation.room.building.name,
+				roomName: reservation.room.name,
+				startTime: reservation.startTime,
+				endTime: reservation.endTime,
+				reservationType: reservation.type,
+				anticipatedAttendance: reservation.anticipatedAttendance,
+				purpose: reservation.purpose,
+				suppliesNeeded: reservation.suppliesNeeded ?? "",
+				contactName: reservation.contactName,
+				contactEmail: reservation.contactEmail,
+				contactPhone: reservation.contactPhone,
+			});
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [reservation?.id]);
 
 	return (
 		<>
@@ -95,7 +118,11 @@ const ReservationModal = ({
 				</ActionIcon>
 			)}
 
-			<Modal opened={opened} onClose={close} title="Create Reservation">
+			<Modal
+				opened={opened}
+				onClose={close}
+				title={reservation ? `Reservation - ${reservation.id}` : "Create Reservation"}
+			>
 				<form onSubmit={form.onSubmit(handleSubmit)}>
 					<Stack gap={"xs"}>
 						<Autocomplete
@@ -107,7 +134,6 @@ const ReservationModal = ({
 								form.setFieldValue("buildingName", value);
 								form.setFieldValue("roomName", "");
 							}}
-							value={reservation?.room.building.name ?? undefined}
 							readOnly={!!reservation}
 							styles={reservation ? { input: { cursor: "not-allowed" } } : undefined}
 						/>
@@ -121,7 +147,6 @@ const ReservationModal = ({
 							}
 							disabled={!reservation && !form.values.buildingName}
 							{...form.getInputProps("roomName")}
-							value={reservation?.room.name ?? undefined}
 							readOnly={!!reservation}
 							styles={reservation ? { input: { cursor: "not-allowed" } } : undefined}
 						/>
@@ -136,7 +161,6 @@ const ReservationModal = ({
 									format: "12h",
 								}}
 								{...form.getInputProps("startTime")}
-								value={reservation?.startTime ?? undefined}
 							/>
 							<DateTimePicker
 								label="End Time"
@@ -147,7 +171,6 @@ const ReservationModal = ({
 									format: "12h",
 								}}
 								{...form.getInputProps("endTime")}
-								value={reservation?.endTime ?? undefined}
 							/>
 						</Group>
 
@@ -156,50 +179,28 @@ const ReservationModal = ({
 							placeholder="Select a type"
 							data={reservationTypeOptions}
 							{...form.getInputProps("reservationType")}
-							value={reservation?.type ?? undefined}
 						/>
 
 						<NumberInput
 							label="Anticipated Attendance"
 							min={1}
 							{...form.getInputProps("anticipatedAttendance")}
-							value={reservation?.anticipatedAttendance ?? undefined}
 						/>
 
-						<Textarea
-							label="Purpose"
-							{...form.getInputProps("purpose")}
-							value={reservation?.purpose ?? undefined}
-						/>
+						<Textarea label="Purpose" {...form.getInputProps("purpose")} />
 
-						<Textarea
-							label="Supplies Needed"
-							{...form.getInputProps("suppliesNeeded")}
-							value={reservation?.suppliesNeeded ?? undefined}
-						/>
+						<Textarea label="Supplies Needed" {...form.getInputProps("suppliesNeeded")} />
 
 						<Divider mt="xs" />
 
-						<TextInput
-							label="Contact Name"
-							{...form.getInputProps("contactName")}
-							value={reservation?.contactName ?? undefined}
-						/>
-						<TextInput
-							label="Contact Email"
-							{...form.getInputProps("contactEmail")}
-							value={reservation?.contactEmail ?? undefined}
-						/>
-						<TextInput
-							label="Contact Phone Number"
-							{...form.getInputProps("contactPhone")}
-							value={reservation?.contactPhone ?? undefined}
-						/>
+						<TextInput label="Contact Name" {...form.getInputProps("contactName")} />
+						<TextInput label="Contact Email" {...form.getInputProps("contactEmail")} />
+						<TextInput label="Contact Phone Number" {...form.getInputProps("contactPhone")} />
 					</Stack>
 
 					<Group justify="flex-end" mt="lg">
-						<Button type="submit" loading={loading}>
-							Submit
+						<Button type="submit" loading={isPending}>
+							{reservation ? "Update" : "Create"}
 						</Button>
 					</Group>
 				</form>
