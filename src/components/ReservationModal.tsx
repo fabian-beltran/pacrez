@@ -10,16 +10,19 @@ import {
 	Autocomplete,
 	Stack,
 	TextInput,
+	ActionIcon,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { DateTimePicker } from "@mantine/dates";
 import { Building, Room, ReservationType } from "@/generated/prisma/browser";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useForm } from "@mantine/form";
-import { CreateReservationInput, createReservationSchema } from "@/lib/schemas/reservations";
+import { ReservationInput, reservationSchema } from "@/lib/schemas/reservations";
 import { createReservation } from "@/server-actions/reservations";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
+import { IconEye } from "@tabler/icons-react";
+import { ReservationGetPayload } from "@/generated/prisma/models";
 
 function getDefaultTimes() {
 	const now = new Date();
@@ -39,12 +42,18 @@ const reservationTypeOptions = Object.values(ReservationType).map((type) => ({
 	label: type.charAt(0) + type.slice(1).toLowerCase(),
 }));
 
-const CreateReservationModal = ({ buildings }: { buildings: (Building & { rooms: Room[] })[] }) => {
+const ReservationModal = ({
+	buildings,
+	reservation,
+}: {
+	buildings: (Building & { rooms: Room[] })[];
+	reservation?: ReservationGetPayload<{ include: { room: { include: { building: true } } } }>;
+}) => {
 	const { start, end } = getDefaultTimes();
 	const router = useRouter();
 	const [opened, { open, close }] = useDisclosure(false, { onClose: () => form.reset() });
 	const [loading, startTransition] = useTransition();
-	const form = useForm<CreateReservationInput>({
+	const form = useForm<ReservationInput>({
 		initialValues: {
 			buildingName: "",
 			roomName: "",
@@ -58,10 +67,10 @@ const CreateReservationModal = ({ buildings }: { buildings: (Building & { rooms:
 			contactEmail: "",
 			contactPhone: "",
 		},
-		validate: zod4Resolver(createReservationSchema),
+		validate: zod4Resolver(reservationSchema),
 	});
 
-	const handleSubmit = async (values: CreateReservationInput) => {
+	const handleSubmit = async (values: ReservationInput) => {
 		startTransition(async () => {
 			try {
 				await createReservation(values);
@@ -75,9 +84,16 @@ const CreateReservationModal = ({ buildings }: { buildings: (Building & { rooms:
 
 	return (
 		<>
-			<Button onClick={open} mb="xs">
-				Create Reservation
-			</Button>
+			{!reservation && (
+				<Button onClick={open} mb="xs">
+					Create Reservation
+				</Button>
+			)}
+			{reservation && (
+				<ActionIcon variant="transparent" onClick={open}>
+					<IconEye />
+				</ActionIcon>
+			)}
 
 			<Modal opened={opened} onClose={close} title="Create Reservation">
 				<form onSubmit={form.onSubmit(handleSubmit)}>
@@ -91,6 +107,9 @@ const CreateReservationModal = ({ buildings }: { buildings: (Building & { rooms:
 								form.setFieldValue("buildingName", value);
 								form.setFieldValue("roomName", "");
 							}}
+							value={reservation?.room.building.name ?? undefined}
+							readOnly={!!reservation}
+							styles={reservation ? { input: { cursor: "not-allowed" } } : undefined}
 						/>
 
 						<Autocomplete
@@ -100,8 +119,11 @@ const CreateReservationModal = ({ buildings }: { buildings: (Building & { rooms:
 								buildings.find((b) => b.name === form.values.buildingName)?.rooms.map((r) => r.name) ??
 								[]
 							}
-							disabled={!form.values.buildingName}
+							disabled={!reservation && !form.values.buildingName}
 							{...form.getInputProps("roomName")}
+							value={reservation?.room.name ?? undefined}
+							readOnly={!!reservation}
+							styles={reservation ? { input: { cursor: "not-allowed" } } : undefined}
 						/>
 
 						<Group grow>
@@ -114,6 +136,7 @@ const CreateReservationModal = ({ buildings }: { buildings: (Building & { rooms:
 									format: "12h",
 								}}
 								{...form.getInputProps("startTime")}
+								value={reservation?.startTime ?? undefined}
 							/>
 							<DateTimePicker
 								label="End Time"
@@ -124,6 +147,7 @@ const CreateReservationModal = ({ buildings }: { buildings: (Building & { rooms:
 									format: "12h",
 								}}
 								{...form.getInputProps("endTime")}
+								value={reservation?.endTime ?? undefined}
 							/>
 						</Group>
 
@@ -132,23 +156,45 @@ const CreateReservationModal = ({ buildings }: { buildings: (Building & { rooms:
 							placeholder="Select a type"
 							data={reservationTypeOptions}
 							{...form.getInputProps("reservationType")}
+							value={reservation?.type ?? undefined}
 						/>
 
 						<NumberInput
 							label="Anticipated Attendance"
 							min={1}
 							{...form.getInputProps("anticipatedAttendance")}
+							value={reservation?.anticipatedAttendance ?? undefined}
 						/>
 
-						<Textarea label="Purpose" {...form.getInputProps("purpose")} />
+						<Textarea
+							label="Purpose"
+							{...form.getInputProps("purpose")}
+							value={reservation?.purpose ?? undefined}
+						/>
 
-						<Textarea label="Supplies Needed" {...form.getInputProps("suppliesNeeded")} />
+						<Textarea
+							label="Supplies Needed"
+							{...form.getInputProps("suppliesNeeded")}
+							value={reservation?.suppliesNeeded ?? undefined}
+						/>
 
 						<Divider mt="xs" />
 
-						<TextInput label="Contact Name" {...form.getInputProps("contactName")} />
-						<TextInput label="Contact Email" {...form.getInputProps("contactEmail")} />
-						<TextInput label="Contact Phone Number" {...form.getInputProps("contactPhone")} />
+						<TextInput
+							label="Contact Name"
+							{...form.getInputProps("contactName")}
+							value={reservation?.contactName ?? undefined}
+						/>
+						<TextInput
+							label="Contact Email"
+							{...form.getInputProps("contactEmail")}
+							value={reservation?.contactEmail ?? undefined}
+						/>
+						<TextInput
+							label="Contact Phone Number"
+							{...form.getInputProps("contactPhone")}
+							value={reservation?.contactPhone ?? undefined}
+						/>
 					</Stack>
 
 					<Group justify="flex-end" mt="lg">
@@ -162,4 +208,4 @@ const CreateReservationModal = ({ buildings }: { buildings: (Building & { rooms:
 	);
 };
 
-export default CreateReservationModal;
+export default ReservationModal;

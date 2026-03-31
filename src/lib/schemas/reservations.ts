@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export const createReservationSchema = z
+export const reservationSchema = z
 	.object({
 		buildingName: z.string().min(1, "Please select a building."),
 		roomName: z.string().min(1, "Please select a room."),
@@ -19,4 +19,4 @@ export const createReservationSchema = z
 		path: ["endTime"],
 	});
 
-export type CreateReservationInput = z.infer<typeof createReservationSchema>;
+export type ReservationInput = z.infer<typeof reservationSchema>;

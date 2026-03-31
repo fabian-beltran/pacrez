@@ -1,6 +1,7 @@
 "use client";
 import { Table } from "@mantine/core";
 import { Building, Reservation, Room } from "@/generated/prisma/browser";
+import ReservationModal from "./ReservationModal";
 
 const ReservationsTable = ({
 	reservations,
@@ -29,11 +30,13 @@ const ReservationsTable = ({
 				})}
 			</Table.Td>
 			<Table.Td>{reservation.type}</Table.Td>
-			<Table.Td>{reservation.anticipatedAttendance}</Table.Td>
 			<Table.Td>{reservation.contactName}</Table.Td>
 			<Table.Td>{reservation.contactEmail}</Table.Td>
 			<Table.Td>{reservation.contactPhone}</Table.Td>
 			<Table.Td>{reservation.status}</Table.Td>
+			<Table.Td>
+				<ReservationModal buildings={[]} reservation={reservation} />
+			</Table.Td>
 		</Table.Tr>
 	));
 	return (
@@ -42,14 +45,14 @@ const ReservationsTable = ({
 				<Table.Thead>
 					<Table.Tr>
 						<Table.Th>Room Name</Table.Th>
-						<Table.Th>Start Date</Table.Th>
-						<Table.Th>End Date</Table.Th>
+						<Table.Th>Start Time</Table.Th>
+						<Table.Th>End Time</Table.Th>
 						<Table.Th>Type</Table.Th>
-						<Table.Th>Attendance</Table.Th>
 						<Table.Th>Contact Name</Table.Th>
 						<Table.Th>Contact Email</Table.Th>
 						<Table.Th>Contact Phone</Table.Th>
 						<Table.Th>Status</Table.Th>
+						<Table.Th></Table.Th>
 					</Table.Tr>
 				</Table.Thead>
 				<Table.Tbody>{rows}</Table.Tbody>

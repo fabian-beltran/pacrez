@@ -1,6 +1,7 @@
 import { Text, Paper, SimpleGrid, Title } from "@mantine/core";
-import BookingsTable from "../(auth)/reservations/ReservationsTable";
+import ReservationsTable from "../../components/ReservationsTable";
 import { requireUser } from "@/lib/helpers/authHelpers";
+import { getReservations } from "@/server-actions/reservations";
 
 const StatCard = ({ label, value }: { label: string; value: string }) => {
 	return (
@@ -17,6 +18,7 @@ const StatCard = ({ label, value }: { label: string; value: string }) => {
 
 export default async function AdminPage() {
 	await requireUser("/", ["ADMIN"]);
+	const reservations = await getReservations(true);
 
 	return (
 		<>
@@ -29,7 +31,7 @@ export default async function AdminPage() {
 			<Title ta="center" mb="sm">
 				Recent Reservations
 			</Title>
-			<BookingsTable />
+			<ReservationsTable reservations={reservations} />
 		</>
 	);
 }

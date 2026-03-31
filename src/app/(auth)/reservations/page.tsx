@@ -1,6 +1,6 @@
 import { Title } from "@mantine/core";
-import ReservationsTable from "./ReservationsTable";
-import CreateBookingModal from "./CreateReservationModal";
+import ReservationsTable from "../../../components/ReservationsTable";
+import ReservationModal from "../../../components/ReservationModal";
 import { getBuildings } from "@/server-actions/buildings";
 import { getReservations } from "@/server-actions/reservations";
 
@@ -11,7 +11,7 @@ export default async function ReservationsPage() {
 	return (
 		<>
 			<Title mb="md">Your Reservations</Title>
-			<CreateBookingModal buildings={buildings} />
+			<ReservationModal buildings={buildings} />
 			<ReservationsTable reservations={reservations} />
 		</>
 	);

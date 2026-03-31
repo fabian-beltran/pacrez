@@ -53,11 +53,11 @@ export const createReservation = async ({
 	return { success: true, reservationId: reservation.id };
 };
 
-export const getReservations = async () => {
+export const getReservations = async (all?: boolean) => {
 	const user = await requireUser();
 
 	const reservations = await prisma.reservation.findMany({
-		where: { userId: user.id },
+		where: { userId: all && user.role === "ADMIN" ? undefined : user.id },
 		include: { room: { include: { building: true } } },
 		orderBy: { createdAt: "desc" },
 	});
