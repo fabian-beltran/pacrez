@@ -1,5 +1,5 @@
 "use server";
-import { ReservationType } from "@/generated/prisma/enums";
+import { ReservationStatus, ReservationType } from "@/generated/prisma/enums";
 import prisma from "@/lib/prisma";
 import { ReservationInput } from "@/lib/schemas/reservations";
 import { requireUser } from "./auth";
@@ -109,4 +109,20 @@ export const updateReservation = async (
 	});
 
 	return { success: true, reservationId: reservation.id };
+};
+
+export const updateReservationStatus = async (reservationId: string, status: ReservationStatus) => {
+	const user = await requireUser();
+	if (user.role !== "ADMIN") throw new Error("Unauthorized.");
+
+	const updatedReservation = await prisma.reservation.update({
+		where: { id: reservationId },
+		data: {
+			status,
+			statusUpdatedAt: new Date(),
+			statusUpdatedById: user.id,
+		},
+	});
+
+	return updatedReservation;
 };

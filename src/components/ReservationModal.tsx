@@ -14,11 +14,11 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { DateTimePicker } from "@mantine/dates";
-import { Building, Room, ReservationType } from "@/generated/prisma/browser";
+import { Building, Room, ReservationType, ReservationStatus } from "@/generated/prisma/browser";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useForm } from "@mantine/form";
 import { ReservationInput, reservationSchema } from "@/lib/schemas/reservations";
-import { createReservation, updateReservation } from "@/server-actions/reservations";
+import { createReservation, updateReservation, updateReservationStatus } from "@/server-actions/reservations";
 import { useRouter } from "next/navigation";
 import { useEffect, useTransition } from "react";
 import { IconEye } from "@tabler/icons-react";
@@ -106,6 +106,17 @@ const ReservationModal = ({
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [reservation?.id]);
+
+	const handleStatusChange = async (status: ReservationStatus) => {
+		if (!reservation) return;
+		try {
+			await updateReservationStatus(reservation.id, status);
+			router.refresh();
+			close();
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
 	return (
 		<>
@@ -201,11 +212,29 @@ const ReservationModal = ({
 					</Stack>
 
 					<Group mt="lg" justify="space-between">
-						{user?.role === "ADMIN" && (
+						{user?.role === "ADMIN" && reservation && (
 							<Group gap="xs">
-								<Button color="green">Approve</Button>
-								<Button color="red">Deny</Button>
-								<Button color="gray">Pending</Button>
+								<Button
+									color="green"
+									onClick={() => handleStatusChange("APPROVED")}
+									disabled={reservation.status === "APPROVED"}
+								>
+									Approve
+								</Button>
+								<Button
+									color="red"
+									onClick={() => handleStatusChange("DENIED")}
+									disabled={reservation.status === "DENIED"}
+								>
+									Deny
+								</Button>
+								<Button
+									color="gray"
+									onClick={() => handleStatusChange("PENDING")}
+									disabled={reservation.status === "PENDING"}
+								>
+									Pending
+								</Button>
 							</Group>
 						)}
 						<Group>
