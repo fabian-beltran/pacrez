@@ -32,24 +32,26 @@ enum ReservationType {
   CLASS
 }
 
-
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  firstName    String
-  lastName	   String
-  
-  passwordHash String
-  role         Role     @default(STUDENT)
+  id        String @id @default(cuid())
+  email     String @unique
+  firstName String
+  lastName  String
 
-  reservations Reservation[]
+  passwordHash String
+  role         Role   @default(STUDENT)
+
+  reservations        Reservation[]
+  reservationComments ReservationComment[]
+
+  updatedReservations Reservation[] @relation("ReservationStatusUpdater")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Room {
-  id          String @id @default(cuid())
+  id          String  @id @default(cuid())
   name        String
   capacity    Int
   description String?
@@ -63,25 +65,31 @@ model Room {
 }
 
 model Reservation {
-  id        String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  userId    String
-  roomId    String
+  userId String
+  roomId String
 
-  startTime DateTime
-  endTime   DateTime
-  type ReservationType
+  startTime             DateTime
+  endTime               DateTime
+  type                  ReservationType
   anticipatedAttendance Int
-  purpose String
-  suppliesNeeded String?
-  contactName String
-  contactEmail String
-  contactPhone String
+  purpose               String
+  suppliesNeeded        String?
+  contactName           String
+  contactEmail          String
+  contactPhone          String
 
-  status    ReservationStatus @default(PENDING)
+  status            ReservationStatus @default(PENDING)
+  statusUpdatedAt   DateTime?
+  statusUpdatedById String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  statusUpdatedBy User? @relation("ReservationStatusUpdater", fields: [statusUpdatedById], references: [id])
+
+  comments ReservationComment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -90,10 +98,30 @@ model Reservation {
 }
 
 model Building {
-  id    String @id @default(cuid())
-  name  String @unique
+  id   String @id @default(cuid())
+  name String @unique
+
+  mapTop  Float
+  mapLeft Float
 
   rooms Room[]
 }
 
+model ReservationComment {
+  id String @id @default(cuid())
 
+  reservationId String
+  userId        String
+  parentId      String?
+
+  content String
+
+  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  parent  ReservationComment?  @relation("ReservationCommentReplies", fields: [parentId], references: [id])
+  replies ReservationComment[] @relation("ReservationCommentReplies")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

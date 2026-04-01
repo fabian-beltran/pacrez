@@ -23,6 +23,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useTransition } from "react";
 import { IconEye } from "@tabler/icons-react";
 import { ReservationGetPayload } from "@/generated/prisma/models";
+import { useAuth } from "@/context/AuthContext";
 
 function getDefaultTimes() {
 	const now = new Date();
@@ -49,6 +50,7 @@ const ReservationModal = ({
 	buildings: (Building & { rooms: Room[] })[];
 	reservation?: ReservationGetPayload<{ include: { room: { include: { building: true } } } }>;
 }) => {
+	const user = useAuth();
 	const { start, end } = getDefaultTimes();
 	const router = useRouter();
 	const [opened, { open, close }] = useDisclosure(false, { onClose: () => !reservation && form.reset() });
@@ -198,10 +200,19 @@ const ReservationModal = ({
 						<TextInput label="Contact Phone Number" {...form.getInputProps("contactPhone")} />
 					</Stack>
 
-					<Group justify="flex-end" mt="lg">
-						<Button type="submit" loading={isPending}>
-							{reservation ? "Update" : "Create"}
-						</Button>
+					<Group mt="lg" justify="space-between">
+						{user?.role === "ADMIN" && (
+							<Group gap="xs">
+								<Button color="green">Approve</Button>
+								<Button color="red">Deny</Button>
+								<Button color="gray">Pending</Button>
+							</Group>
+						)}
+						<Group>
+							<Button type="submit" loading={isPending}>
+								{reservation ? "Update" : "Create"}
+							</Button>
+						</Group>
 					</Group>
 				</form>
 			</Modal>

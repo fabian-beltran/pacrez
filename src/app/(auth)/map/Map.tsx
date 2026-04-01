@@ -42,6 +42,21 @@ const MapButton = ({ label, top, left }: { label: string; top: string; left: str
 };
 
 export default function Map() {
+	const handleMapClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+		const target = e.currentTarget as HTMLDivElement;
+		const rect = target.getBoundingClientRect();
+
+		// Mouse position relative to image top-left
+		const x = e.clientX - rect.left;
+		const y = e.clientY - rect.top;
+
+		// Convert to percentage
+		const mapLeft = (x / rect.width) * 100;
+		const mapTop = (y / rect.height) * 100;
+
+		console.log("mapTop:", mapTop.toFixed(2), "mapLeft:", mapLeft.toFixed(2));
+	};
+
 	return (
 		<Box pos="relative">
 			<TransformWrapper initialScale={3} minScale={1} maxScale={10} centerOnInit centerZoomedOut>
@@ -59,16 +74,18 @@ export default function Map() {
 
 						{/* Image */}
 						<TransformComponent>
-							<Image src={campusMap} alt="map" style={{ height: "90vh", width: "auto" }} />
+							<Box onClick={handleMapClick} pos="relative">
+								<Image src={campusMap} alt="map" style={{ height: "90vh", width: "auto" }} />
 
-							{locations.map((location) => (
-								<MapButton
-									key={location.label}
-									label={location.label}
-									top={location.top}
-									left={location.left}
-								/>
-							))}
+								{locations.map((location) => (
+									<MapButton
+										key={location.label}
+										label={location.label}
+										top={location.top}
+										left={location.left}
+									/>
+								))}
+							</Box>
 						</TransformComponent>
 					</>
 				)}

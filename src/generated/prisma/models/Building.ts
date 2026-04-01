@@ -20,40 +20,74 @@ export type BuildingModel = runtime.Types.Result.DefaultSelection<Prisma.$Buildi
 
 export type AggregateBuilding = {
   _count: BuildingCountAggregateOutputType | null
+  _avg: BuildingAvgAggregateOutputType | null
+  _sum: BuildingSumAggregateOutputType | null
   _min: BuildingMinAggregateOutputType | null
   _max: BuildingMaxAggregateOutputType | null
+}
+
+export type BuildingAvgAggregateOutputType = {
+  mapTop: number | null
+  mapLeft: number | null
+}
+
+export type BuildingSumAggregateOutputType = {
+  mapTop: number | null
+  mapLeft: number | null
 }
 
 export type BuildingMinAggregateOutputType = {
   id: string | null
   name: string | null
+  mapTop: number | null
+  mapLeft: number | null
 }
 
 export type BuildingMaxAggregateOutputType = {
   id: string | null
   name: string | null
+  mapTop: number | null
+  mapLeft: number | null
 }
 
 export type BuildingCountAggregateOutputType = {
   id: number
   name: number
+  mapTop: number
+  mapLeft: number
   _all: number
 }
 
 
+export type BuildingAvgAggregateInputType = {
+  mapTop?: true
+  mapLeft?: true
+}
+
+export type BuildingSumAggregateInputType = {
+  mapTop?: true
+  mapLeft?: true
+}
+
 export type BuildingMinAggregateInputType = {
   id?: true
   name?: true
+  mapTop?: true
+  mapLeft?: true
 }
 
 export type BuildingMaxAggregateInputType = {
   id?: true
   name?: true
+  mapTop?: true
+  mapLeft?: true
 }
 
 export type BuildingCountAggregateInputType = {
   id?: true
   name?: true
+  mapTop?: true
+  mapLeft?: true
   _all?: true
 }
 
@@ -95,6 +129,18 @@ export type BuildingAggregateArgs<ExtArgs extends runtime.Types.Extensions.Inter
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: BuildingAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: BuildingSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: BuildingMinAggregateInputType
@@ -125,6 +171,8 @@ export type BuildingGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   _count?: BuildingCountAggregateInputType | true
+  _avg?: BuildingAvgAggregateInputType
+  _sum?: BuildingSumAggregateInputType
   _min?: BuildingMinAggregateInputType
   _max?: BuildingMaxAggregateInputType
 }
@@ -132,7 +180,11 @@ export type BuildingGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type BuildingGroupByOutputType = {
   id: string
   name: string
+  mapTop: number
+  mapLeft: number
   _count: BuildingCountAggregateOutputType | null
+  _avg: BuildingAvgAggregateOutputType | null
+  _sum: BuildingSumAggregateOutputType | null
   _min: BuildingMinAggregateOutputType | null
   _max: BuildingMaxAggregateOutputType | null
 }
@@ -158,12 +210,16 @@ export type BuildingWhereInput = {
   NOT?: Prisma.BuildingWhereInput | Prisma.BuildingWhereInput[]
   id?: Prisma.StringFilter<"Building"> | string
   name?: Prisma.StringFilter<"Building"> | string
+  mapTop?: Prisma.FloatFilter<"Building"> | number
+  mapLeft?: Prisma.FloatFilter<"Building"> | number
   rooms?: Prisma.RoomListRelationFilter
 }
 
 export type BuildingOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  mapTop?: Prisma.SortOrder
+  mapLeft?: Prisma.SortOrder
   rooms?: Prisma.RoomOrderByRelationAggregateInput
 }
 
@@ -173,15 +229,21 @@ export type BuildingWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.BuildingWhereInput | Prisma.BuildingWhereInput[]
   OR?: Prisma.BuildingWhereInput[]
   NOT?: Prisma.BuildingWhereInput | Prisma.BuildingWhereInput[]
+  mapTop?: Prisma.FloatFilter<"Building"> | number
+  mapLeft?: Prisma.FloatFilter<"Building"> | number
   rooms?: Prisma.RoomListRelationFilter
 }, "id" | "name">
 
 export type BuildingOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  mapTop?: Prisma.SortOrder
+  mapLeft?: Prisma.SortOrder
   _count?: Prisma.BuildingCountOrderByAggregateInput
+  _avg?: Prisma.BuildingAvgOrderByAggregateInput
   _max?: Prisma.BuildingMaxOrderByAggregateInput
   _min?: Prisma.BuildingMinOrderByAggregateInput
+  _sum?: Prisma.BuildingSumOrderByAggregateInput
 }
 
 export type BuildingScalarWhereWithAggregatesInput = {
@@ -190,45 +252,61 @@ export type BuildingScalarWhereWithAggregatesInput = {
   NOT?: Prisma.BuildingScalarWhereWithAggregatesInput | Prisma.BuildingScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Building"> | string
   name?: Prisma.StringWithAggregatesFilter<"Building"> | string
+  mapTop?: Prisma.FloatWithAggregatesFilter<"Building"> | number
+  mapLeft?: Prisma.FloatWithAggregatesFilter<"Building"> | number
 }
 
 export type BuildingCreateInput = {
   id?: string
   name: string
+  mapTop: number
+  mapLeft: number
   rooms?: Prisma.RoomCreateNestedManyWithoutBuildingInput
 }
 
 export type BuildingUncheckedCreateInput = {
   id?: string
   name: string
+  mapTop: number
+  mapLeft: number
   rooms?: Prisma.RoomUncheckedCreateNestedManyWithoutBuildingInput
 }
 
 export type BuildingUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  mapTop?: Prisma.FloatFieldUpdateOperationsInput | number
+  mapLeft?: Prisma.FloatFieldUpdateOperationsInput | number
   rooms?: Prisma.RoomUpdateManyWithoutBuildingNestedInput
 }
 
 export type BuildingUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  mapTop?: Prisma.FloatFieldUpdateOperationsInput | number
+  mapLeft?: Prisma.FloatFieldUpdateOperationsInput | number
   rooms?: Prisma.RoomUncheckedUpdateManyWithoutBuildingNestedInput
 }
 
 export type BuildingCreateManyInput = {
   id?: string
   name: string
+  mapTop: number
+  mapLeft: number
 }
 
 export type BuildingUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  mapTop?: Prisma.FloatFieldUpdateOperationsInput | number
+  mapLeft?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type BuildingUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  mapTop?: Prisma.FloatFieldUpdateOperationsInput | number
+  mapLeft?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type BuildingScalarRelationFilter = {
@@ -239,16 +317,32 @@ export type BuildingScalarRelationFilter = {
 export type BuildingCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  mapTop?: Prisma.SortOrder
+  mapLeft?: Prisma.SortOrder
+}
+
+export type BuildingAvgOrderByAggregateInput = {
+  mapTop?: Prisma.SortOrder
+  mapLeft?: Prisma.SortOrder
 }
 
 export type BuildingMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  mapTop?: Prisma.SortOrder
+  mapLeft?: Prisma.SortOrder
 }
 
 export type BuildingMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  mapTop?: Prisma.SortOrder
+  mapLeft?: Prisma.SortOrder
+}
+
+export type BuildingSumOrderByAggregateInput = {
+  mapTop?: Prisma.SortOrder
+  mapLeft?: Prisma.SortOrder
 }
 
 export type BuildingCreateNestedOneWithoutRoomsInput = {
@@ -265,14 +359,26 @@ export type BuildingUpdateOneRequiredWithoutRoomsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BuildingUpdateToOneWithWhereWithoutRoomsInput, Prisma.BuildingUpdateWithoutRoomsInput>, Prisma.BuildingUncheckedUpdateWithoutRoomsInput>
 }
 
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type BuildingCreateWithoutRoomsInput = {
   id?: string
   name: string
+  mapTop: number
+  mapLeft: number
 }
 
 export type BuildingUncheckedCreateWithoutRoomsInput = {
   id?: string
   name: string
+  mapTop: number
+  mapLeft: number
 }
 
 export type BuildingCreateOrConnectWithoutRoomsInput = {
@@ -294,11 +400,15 @@ export type BuildingUpdateToOneWithWhereWithoutRoomsInput = {
 export type BuildingUpdateWithoutRoomsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  mapTop?: Prisma.FloatFieldUpdateOperationsInput | number
+  mapLeft?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type BuildingUncheckedUpdateWithoutRoomsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  mapTop?: Prisma.FloatFieldUpdateOperationsInput | number
+  mapLeft?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 
@@ -335,6 +445,8 @@ export type BuildingCountOutputTypeCountRoomsArgs<ExtArgs extends runtime.Types.
 export type BuildingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  mapTop?: boolean
+  mapLeft?: boolean
   rooms?: boolean | Prisma.Building$roomsArgs<ExtArgs>
   _count?: boolean | Prisma.BuildingCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["building"]>
@@ -342,19 +454,25 @@ export type BuildingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type BuildingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  mapTop?: boolean
+  mapLeft?: boolean
 }, ExtArgs["result"]["building"]>
 
 export type BuildingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  mapTop?: boolean
+  mapLeft?: boolean
 }, ExtArgs["result"]["building"]>
 
 export type BuildingSelectScalar = {
   id?: boolean
   name?: boolean
+  mapTop?: boolean
+  mapLeft?: boolean
 }
 
-export type BuildingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name", ExtArgs["result"]["building"]>
+export type BuildingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "mapTop" | "mapLeft", ExtArgs["result"]["building"]>
 export type BuildingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   rooms?: boolean | Prisma.Building$roomsArgs<ExtArgs>
   _count?: boolean | Prisma.BuildingCountOutputTypeDefaultArgs<ExtArgs>
@@ -370,6 +488,8 @@ export type $BuildingPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
+    mapTop: number
+    mapLeft: number
   }, ExtArgs["result"]["building"]>
   composites: {}
 }
@@ -796,6 +916,8 @@ export interface Prisma__BuildingClient<T, Null = never, ExtArgs extends runtime
 export interface BuildingFieldRefs {
   readonly id: Prisma.FieldRef<"Building", 'String'>
   readonly name: Prisma.FieldRef<"Building", 'String'>
+  readonly mapTop: Prisma.FieldRef<"Building", 'Float'>
+  readonly mapLeft: Prisma.FieldRef<"Building", 'Float'>
 }
     
 

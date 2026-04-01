@@ -54,7 +54,8 @@ export const ModelName = {
   User: 'User',
   Room: 'Room',
   Reservation: 'Reservation',
-  Building: 'Building'
+  Building: 'Building',
+  ReservationComment: 'ReservationComment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -112,6 +113,8 @@ export const ReservationScalarFieldEnum = {
   contactEmail: 'contactEmail',
   contactPhone: 'contactPhone',
   status: 'status',
+  statusUpdatedAt: 'statusUpdatedAt',
+  statusUpdatedById: 'statusUpdatedById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -121,10 +124,25 @@ export type ReservationScalarFieldEnum = (typeof ReservationScalarFieldEnum)[key
 
 export const BuildingScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  mapTop: 'mapTop',
+  mapLeft: 'mapLeft'
 } as const
 
 export type BuildingScalarFieldEnum = (typeof BuildingScalarFieldEnum)[keyof typeof BuildingScalarFieldEnum]
+
+
+export const ReservationCommentScalarFieldEnum = {
+  id: 'id',
+  reservationId: 'reservationId',
+  userId: 'userId',
+  parentId: 'parentId',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReservationCommentScalarFieldEnum = (typeof ReservationCommentScalarFieldEnum)[keyof typeof ReservationCommentScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -37,3 +37,8 @@ export type Reservation = Prisma.ReservationModel
  * 
  */
 export type Building = Prisma.BuildingModel
+/**
+ * Model ReservationComment
+ * 
+ */
+export type ReservationComment = Prisma.ReservationCommentModel

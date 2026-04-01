@@ -387,7 +387,8 @@ export const ModelName = {
   User: 'User',
   Room: 'Room',
   Reservation: 'Reservation',
-  Building: 'Building'
+  Building: 'Building',
+  ReservationComment: 'ReservationComment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -403,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "room" | "reservation" | "building"
+    modelProps: "user" | "room" | "reservation" | "building" | "reservationComment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -703,6 +704,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ReservationComment: {
+      payload: Prisma.$ReservationCommentPayload<ExtArgs>
+      fields: Prisma.ReservationCommentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReservationCommentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReservationCommentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReservationCommentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReservationCommentPayload>
+        }
+        findFirst: {
+          args: Prisma.ReservationCommentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReservationCommentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReservationCommentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReservationCommentPayload>
+        }
+        findMany: {
+          args: Prisma.ReservationCommentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReservationCommentPayload>[]
+        }
+        create: {
+          args: Prisma.ReservationCommentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReservationCommentPayload>
+        }
+        createMany: {
+          args: Prisma.ReservationCommentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ReservationCommentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReservationCommentPayload>[]
+        }
+        delete: {
+          args: Prisma.ReservationCommentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReservationCommentPayload>
+        }
+        update: {
+          args: Prisma.ReservationCommentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReservationCommentPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReservationCommentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReservationCommentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ReservationCommentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReservationCommentPayload>[]
+        }
+        upsert: {
+          args: Prisma.ReservationCommentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReservationCommentPayload>
+        }
+        aggregate: {
+          args: Prisma.ReservationCommentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReservationComment>
+        }
+        groupBy: {
+          args: Prisma.ReservationCommentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReservationCommentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReservationCommentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReservationCommentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -781,6 +856,8 @@ export const ReservationScalarFieldEnum = {
   contactEmail: 'contactEmail',
   contactPhone: 'contactPhone',
   status: 'status',
+  statusUpdatedAt: 'statusUpdatedAt',
+  statusUpdatedById: 'statusUpdatedById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -790,10 +867,25 @@ export type ReservationScalarFieldEnum = (typeof ReservationScalarFieldEnum)[key
 
 export const BuildingScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  mapTop: 'mapTop',
+  mapLeft: 'mapLeft'
 } as const
 
 export type BuildingScalarFieldEnum = (typeof BuildingScalarFieldEnum)[keyof typeof BuildingScalarFieldEnum]
+
+
+export const ReservationCommentScalarFieldEnum = {
+  id: 'id',
+  reservationId: 'reservationId',
+  userId: 'userId',
+  parentId: 'parentId',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReservationCommentScalarFieldEnum = (typeof ReservationCommentScalarFieldEnum)[keyof typeof ReservationCommentScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1022,6 +1114,7 @@ export type GlobalOmitConfig = {
   room?: Prisma.RoomOmit
   reservation?: Prisma.ReservationOmit
   building?: Prisma.BuildingOmit
+  reservationComment?: Prisma.ReservationCommentOmit
 }
 
 /* Types for Logging */
