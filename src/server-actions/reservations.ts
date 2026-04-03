@@ -58,7 +58,10 @@ export const getReservations = async (all?: boolean) => {
 
 	const reservations = await prisma.reservation.findMany({
 		where: { userId: all && user.role === "ADMIN" ? undefined : user.id },
-		include: { room: { include: { building: true } } },
+		include: {
+			room: { include: { building: true } },
+			comments: { include: { user: true, replies: { include: { user: true } } } },
+		},
 		orderBy: { createdAt: "desc" },
 	});
 
@@ -125,4 +128,23 @@ export const updateReservationStatus = async (reservationId: string, status: Res
 	});
 
 	return updatedReservation;
+};
+
+export const createReservationComment = async (reservationId: string, content: string, parentId?: string) => {
+	const user = await requireUser();
+
+	const comment = await prisma.reservationComment.create({
+		data: {
+			reservationId,
+			userId: user.id,
+			content,
+			parentId: parentId ?? null,
+		},
+		include: {
+			user: true,
+			replies: true,
+		},
+	});
+
+	return comment;
 };

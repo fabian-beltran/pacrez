@@ -1,13 +1,9 @@
 "use client";
 import { Table } from "@mantine/core";
-import { Building, Reservation, Room } from "@/generated/prisma/browser";
 import ReservationModal from "./ReservationModal";
+import { Reservation } from "@/lib/prisma-types";
 
-const ReservationsTable = ({
-	reservations,
-}: {
-	reservations: (Reservation & { room: Room & { building: Building } })[];
-}) => {
+const ReservationsTable = ({ reservations }: { reservations: Reservation[] }) => {
 	const rows = reservations.map((reservation) => (
 		<Table.Tr key={reservation.id}>
 			<Table.Td>

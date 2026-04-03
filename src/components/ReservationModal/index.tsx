@@ -11,10 +11,11 @@ import {
 	Stack,
 	TextInput,
 	ActionIcon,
+	Accordion,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { DateTimePicker } from "@mantine/dates";
-import { Building, Room, ReservationType, ReservationStatus } from "@/generated/prisma/browser";
+import { ReservationType, ReservationStatus } from "@/generated/prisma/browser";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useForm } from "@mantine/form";
 import { ReservationInput, reservationSchema } from "@/lib/schemas/reservations";
@@ -22,8 +23,9 @@ import { createReservation, updateReservation, updateReservationStatus } from "@
 import { useRouter } from "next/navigation";
 import { useEffect, useTransition } from "react";
 import { IconEye } from "@tabler/icons-react";
-import { ReservationGetPayload } from "@/generated/prisma/models";
 import { useAuth } from "@/context/AuthContext";
+import { Building, Reservation } from "@/lib/prisma-types";
+import { ReservationComments } from "./ReservationComments";
 
 function getDefaultTimes() {
 	const now = new Date();
@@ -43,13 +45,7 @@ const reservationTypeOptions = Object.values(ReservationType).map((type) => ({
 	label: type.charAt(0) + type.slice(1).toLowerCase(),
 }));
 
-const ReservationModal = ({
-	buildings,
-	reservation,
-}: {
-	buildings: (Building & { rooms: Room[] })[];
-	reservation?: ReservationGetPayload<{ include: { room: { include: { building: true } } } }>;
-}) => {
+const ReservationModal = ({ buildings, reservation }: { buildings: Building[]; reservation?: Reservation }) => {
 	const user = useAuth();
 	const { start, end } = getDefaultTimes();
 	const router = useRouter();
@@ -211,6 +207,17 @@ const ReservationModal = ({
 						<TextInput label="Contact Phone Number" {...form.getInputProps("contactPhone")} />
 					</Stack>
 
+					{reservation && (
+						<Accordion>
+							<Accordion.Item value="Comments">
+								<Accordion.Control>Comments</Accordion.Control>
+								<Accordion.Panel>
+									<ReservationComments reservation={reservation} refresh={router.refresh} />
+								</Accordion.Panel>
+							</Accordion.Item>
+						</Accordion>
+					)}
+
 					<Group mt="lg" justify="space-between">
 						{user?.role === "ADMIN" && reservation && (
 							<Group gap="xs">
@@ -237,6 +244,7 @@ const ReservationModal = ({
 								</Button>
 							</Group>
 						)}
+
 						<Group>
 							<Button type="submit" loading={isPending}>
 								{reservation ? "Update" : "Create"}
