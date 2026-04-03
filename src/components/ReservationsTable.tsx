@@ -9,6 +9,7 @@ const ReservationsTable = ({ reservations }: { reservations: Reservation[] }) =>
 			<Table.Td>
 				{reservation.room.building.name} - {reservation.room.name}
 			</Table.Td>
+			<Table.Td>{reservation.purpose}</Table.Td>
 			<Table.Td>
 				{reservation.startTime.toLocaleString([], {
 					month: "short",
@@ -27,7 +28,12 @@ const ReservationsTable = ({ reservations }: { reservations: Reservation[] }) =>
 			</Table.Td>
 			<Table.Td>{reservation.type}</Table.Td>
 			<Table.Td>{reservation.contactName}</Table.Td>
-			<Table.Td>{reservation.status}</Table.Td>
+			<Table.Td
+				c={reservation.status === "APPROVED" ? "green" : reservation.status === "DENIED" ? "red" : undefined}
+				fw={["APPROVED", "DENIED"].includes(reservation.status) ? 700 : undefined}
+			>
+				{reservation.status}
+			</Table.Td>
 			<Table.Td>
 				<ReservationModal buildings={[]} reservation={reservation} />
 			</Table.Td>
@@ -39,6 +45,7 @@ const ReservationsTable = ({ reservations }: { reservations: Reservation[] }) =>
 				<Table.Thead>
 					<Table.Tr>
 						<Table.Th>Room Name</Table.Th>
+						<Table.Th>Purpose</Table.Th>
 						<Table.Th>Start Time</Table.Th>
 						<Table.Th>End Time</Table.Th>
 						<Table.Th>Type</Table.Th>

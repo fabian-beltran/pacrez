@@ -2,6 +2,7 @@ import { Text, Paper, SimpleGrid, Title } from "@mantine/core";
 import ReservationsTable from "../../components/ReservationsTable";
 import { requireUser } from "@/lib/helpers/authHelpers";
 import { getReservations } from "@/server-actions/reservations";
+import { getRoomCount } from "@/server-actions/buildings";
 
 const StatCard = ({ label, value }: { label: string; value: string }) => {
 	return (
@@ -20,13 +21,23 @@ export default async function AdminPage() {
 	await requireUser("/", ["ADMIN"]);
 	const reservations = await getReservations(true);
 
+	const pendingReservations = reservations.filter((r) => r.status === "PENDING");
+	const approvedToday = reservations.filter(
+		(r) =>
+			r.status === "APPROVED" &&
+			r.statusUpdatedAt &&
+			// eslint-disable-next-line react-hooks/purity
+			Date.now() - new Date(r.statusUpdatedAt).getTime() <= 86400000
+	);
+	const roomCount = await getRoomCount();
+
 	return (
 		<>
 			<SimpleGrid cols={{ base: 1, lg: 4 }} mb="lg">
-				<StatCard label="Pending Requests" value="20" />
-				<StatCard label="Approved Today" value="12" />
-				<StatCard label="Upcoming Reservations" value="54" />
-				<StatCard label="Total Rooms" value="500" />
+				<StatCard label="Pending Reservations" value={pendingReservations.length.toString()} />
+				<StatCard label="Approved Today" value={approvedToday.length.toString()} />
+				<StatCard label="Upcoming Reservations" value="##" />
+				<StatCard label="Total Rooms" value={roomCount.toString()} />
 			</SimpleGrid>
 			<Title ta="center" mb="sm">
 				Recent Reservations

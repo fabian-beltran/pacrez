@@ -10,3 +10,7 @@ export async function getBuildings(): Promise<(Building & { rooms: Room[] })[]> 
 		},
 	});
 }
+
+export async function getRoomCount() {
+	return await prisma.room.count();
+}
