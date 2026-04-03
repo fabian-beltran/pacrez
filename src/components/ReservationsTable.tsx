@@ -27,8 +27,6 @@ const ReservationsTable = ({ reservations }: { reservations: Reservation[] }) =>
 			</Table.Td>
 			<Table.Td>{reservation.type}</Table.Td>
 			<Table.Td>{reservation.contactName}</Table.Td>
-			<Table.Td>{reservation.contactEmail}</Table.Td>
-			<Table.Td>{reservation.contactPhone}</Table.Td>
 			<Table.Td>{reservation.status}</Table.Td>
 			<Table.Td>
 				<ReservationModal buildings={[]} reservation={reservation} />
@@ -45,8 +43,6 @@ const ReservationsTable = ({ reservations }: { reservations: Reservation[] }) =>
 						<Table.Th>End Time</Table.Th>
 						<Table.Th>Type</Table.Th>
 						<Table.Th>Contact Name</Table.Th>
-						<Table.Th>Contact Email</Table.Th>
-						<Table.Th>Contact Phone</Table.Th>
 						<Table.Th>Status</Table.Th>
 						<Table.Th></Table.Th>
 					</Table.Tr>

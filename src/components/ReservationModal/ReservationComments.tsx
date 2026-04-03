@@ -54,14 +54,14 @@ export const ReservationComments = ({ reservation, refresh }: Props) => {
 		<Stack gap="sm" mt="md">
 			<Divider label="Comments" />
 			{reservation.comments && reservation.comments.length > 0 ? (
-				reservation.comments.map((c) => renderComment(c))
+				reservation.comments.filter((c) => !c.parentId).map((c) => renderComment(c))
 			) : (
 				<Text c="dimmed">No comments yet.</Text>
 			)}
 			{user && (
 				<Stack gap="xs" mt="sm">
 					{replyingTo && (
-						<Text size="sm" color="dimmed">
+						<Text size="sm" c="dimmed">
 							Replying to a comment{" "}
 							<Button variant="subtle" size="xs" onClick={() => setReplyingTo(null)}>
 								Cancel
