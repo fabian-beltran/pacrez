@@ -24,7 +24,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useTransition } from "react";
 import { IconEye } from "@tabler/icons-react";
 import { useAuth } from "@/context/AuthContext";
-import { Building, Reservation } from "@/lib/prisma-types";
+import { Building, Reservation, Room } from "@/lib/prisma-types";
 import { ReservationComments } from "./ReservationComments";
 
 function getDefaultTimes() {
@@ -45,7 +45,15 @@ const reservationTypeOptions = Object.values(ReservationType).map((type) => ({
 	label: type.charAt(0) + type.slice(1).toLowerCase(),
 }));
 
-const ReservationModal = ({ buildings, reservation }: { buildings: Building[]; reservation?: Reservation }) => {
+const ReservationModal = ({
+	buildings,
+	reservation,
+	selectedRoom,
+}: {
+	buildings: Building[];
+	reservation?: Reservation;
+	selectedRoom?: Room;
+}) => {
 	const user = useAuth();
 	const { start, end } = getDefaultTimes();
 	const router = useRouter();
@@ -78,6 +86,9 @@ const ReservationModal = ({ buildings, reservation }: { buildings: Building[]; r
 				}
 				close();
 				router.refresh();
+				if (selectedRoom) {
+					router.push("/reservations");
+				}
 			} catch (error) {
 				console.error(error);
 			}
@@ -99,6 +110,11 @@ const ReservationModal = ({ buildings, reservation }: { buildings: Building[]; r
 				contactEmail: reservation.contactEmail,
 				contactPhone: reservation.contactPhone,
 			});
+		} else if (selectedRoom) {
+			form.setValues({
+				buildingName: selectedRoom.building.name,
+				roomName: selectedRoom.name,
+			});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [reservation?.id]);
@@ -116,11 +132,7 @@ const ReservationModal = ({ buildings, reservation }: { buildings: Building[]; r
 
 	return (
 		<>
-			{!reservation && (
-				<Button onClick={open} mb="xs">
-					Create Reservation
-				</Button>
-			)}
+			{!reservation && <Button onClick={open}>Create Reservation</Button>}
 			{reservation && (
 				<ActionIcon variant="transparent" onClick={open}>
 					<IconEye />
@@ -143,8 +155,8 @@ const ReservationModal = ({ buildings, reservation }: { buildings: Building[]; r
 								form.setFieldValue("buildingName", value);
 								form.setFieldValue("roomName", "");
 							}}
-							readOnly={!!reservation}
-							styles={reservation ? { input: { cursor: "not-allowed" } } : undefined}
+							readOnly={!!reservation || !!selectedRoom}
+							styles={reservation || selectedRoom ? { input: { cursor: "not-allowed" } } : undefined}
 						/>
 
 						<Autocomplete
@@ -156,8 +168,8 @@ const ReservationModal = ({ buildings, reservation }: { buildings: Building[]; r
 							}
 							disabled={!reservation && !form.values.buildingName}
 							{...form.getInputProps("roomName")}
-							readOnly={!!reservation}
-							styles={reservation ? { input: { cursor: "not-allowed" } } : undefined}
+							readOnly={!!reservation || !!selectedRoom}
+							styles={reservation || selectedRoom ? { input: { cursor: "not-allowed" } } : undefined}
 						/>
 
 						<Group grow>

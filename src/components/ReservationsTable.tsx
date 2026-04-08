@@ -41,7 +41,7 @@ const ReservationsTable = ({ reservations }: { reservations: Reservation[] }) =>
 	));
 	return (
 		<>
-			<Table verticalSpacing="sm" withTableBorder>
+			<Table verticalSpacing="sm" withTableBorder mt="xs">
 				<Table.Thead>
 					<Table.Tr>
 						<Table.Th>Room Name</Table.Th>

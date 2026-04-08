@@ -1,5 +1,8 @@
+import { getBuildings } from "@/server-actions/buildings";
 import Map from "./Map";
 
 export default async function CampusMap() {
-	return <Map />;
+	const buildings = await getBuildings();
+
+	return <Map buildings={buildings} />;
 }
