@@ -1,5 +1,5 @@
 "use client";
-import { Alert, Button, Center, Grid, PasswordInput, Stack, TextInput, Title } from "@mantine/core";
+import { Alert, Box, Button, Center, Grid, PasswordInput, Stack, Text, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import Link from "next/link";
@@ -7,6 +7,8 @@ import * as z from "zod";
 import { loginAction } from "@/server-actions/auth";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import logo from "@/../public/images/logo.png";
 
 const loginSchema = z.object({
 	email: z.email("Invalid email address").regex(/@.*\.?pacific\.edu$/, "Must use your Pacific email"),
@@ -41,7 +43,14 @@ export default function LoginForm() {
 	};
 
 	return (
-		<Center>
+		<Center style={{ flexDirection: "column" }}>
+			<Center mb="sm" style={{ flexDirection: "column" }}>
+				<Box component={Image} src={logo} alt="Logo" w="200px" h="auto" my="sm" />
+				<Title ta="center">University of the Pacific</Title>
+				<Text ta="center" size="xl">
+					Room Reservation System
+				</Text>
+			</Center>
 			<form onSubmit={form.onSubmit(handleSubmit)}>
 				<Stack gap="xs" w={300}>
 					<Title ta="center">Login</Title>

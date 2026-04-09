@@ -9,7 +9,7 @@ async function main() {
 			mapLeft: 79.5,
 		},
 		{ name: "Morris Chapel", rooms: ["Chapel", "Meditation Room"], mapTop: 46, mapLeft: 87 },
-		{ name: "Sears Hall", rooms: ["101", "102", "103"], mapTop: 50, mapLeft: 60 },
+		{ name: "Sears Hall", rooms: ["101", "102", "103"], mapTop: 44, mapLeft: 87 },
 		{ name: "Chambers Technology Center", rooms: ["Lab 1", "Lab 2", "Lab 3"], mapTop: 64.5, mapLeft: 62 },
 		{ name: "Wendell Philips Center", rooms: ["Auditorium", "Meeting Room 1"], mapTop: 65, mapLeft: 54.5 },
 		{
