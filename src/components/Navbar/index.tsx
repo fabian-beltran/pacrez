@@ -7,18 +7,19 @@ import { useAuth } from "@/context/AuthContext";
 const Navbar = () => {
 	const user = useAuth();
 
-	const loggedInButtons = user && (
+	const loggedInButtons = user && user.isEmailVerified && (
 		<>
 			<NavButton label="Reservations" icon={<IconList />} href="/reservations" />
 			<NavButton label="Campus Map" icon={<IconMap />} href="/map" />
 			{user.role === "ADMIN" && <NavButton label="Admin" icon={<IconLayoutDashboard />} href="/admin" />}
+			<Divider my={12} />
 		</>
 	);
 
 	return (
 		<Box p="xs">
 			{loggedInButtons}
-			<Divider my={12} />
+
 			{!user ? <NavButton label="Login" icon={<IconLogin />} href="/" /> : <LogoutButton />}
 		</Box>
 	);

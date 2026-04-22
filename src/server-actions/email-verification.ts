@@ -1,13 +1,14 @@
+"use server";
 import prisma from "@/lib/prisma";
 import { verify } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import crypto from "crypto";
 import { sendEmail } from "@/lib/email";
 
-export function hashCode(code: string) {
+function hashCode(code: string) {
 	return crypto.createHash("sha256").update(code).digest("hex");
 }
-export function generateCode() {
+function generateCode() {
 	return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
