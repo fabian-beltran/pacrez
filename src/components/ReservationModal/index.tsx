@@ -12,6 +12,7 @@ import {
 	TextInput,
 	ActionIcon,
 	Accordion,
+	UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { DateTimePicker } from "@mantine/dates";
@@ -214,7 +215,27 @@ const ReservationModal = ({
 
 						<Divider mt="xs" />
 
-						<TextInput label="Contact Name" {...form.getInputProps("contactName")} />
+						<TextInput
+							label={
+								<Group>
+									<span>Contact Name</span>
+									{user && (
+										<Button
+											variant="transparent"
+											size="xs"
+											onClick={() => {
+												form.setFieldValue("contactName", `${user.firstName} ${user.lastName}`);
+												form.setFieldValue("contactEmail", user.email);
+												// form.setFieldValue("contactPhone", "");
+											}}
+										>
+											insert my info
+										</Button>
+									)}
+								</Group>
+							}
+							{...form.getInputProps("contactName")}
+						/>
 						<TextInput label="Contact Email" {...form.getInputProps("contactEmail")} />
 						<TextInput label="Contact Phone Number" {...form.getInputProps("contactPhone")} />
 					</Stack>
