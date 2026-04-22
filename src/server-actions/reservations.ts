@@ -4,7 +4,6 @@ import prisma from "@/lib/prisma";
 import { ReservationInput } from "@/lib/schemas/reservations";
 import { requireUser } from "./auth";
 import { sendEmail } from "@/lib/email";
-import { Reservation } from "@/lib/prisma-types";
 
 export const createReservation = async ({
 	roomName,

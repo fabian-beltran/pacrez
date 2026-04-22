@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 import { sign, verify } from "jsonwebtoken";
 import { registerSchema } from "@/lib/schemas/auth";
 import { Role } from "@/generated/prisma/enums";
+import { redirect } from "next/navigation";
 
 export const loginAction = async (formData: { email: string; password: string }) => {
 	const loginSchema = z.object({
@@ -102,9 +103,16 @@ export const getCurrentUser = async () => {
 	}
 };
 
-export const requireUser = async () => {
+export const requireUser = async (verified: boolean = true) => {
 	const user = await getCurrentUser();
-	if (!user) throw new Error("Not logged in.");
+
+	if (!user) {
+		redirect("/login");
+	}
+
+	if (verified && !user.isEmailVerified) {
+		redirect("/verify-email");
+	}
 
 	return user;
 };

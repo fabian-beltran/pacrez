@@ -55,7 +55,8 @@ export const ModelName = {
   Room: 'Room',
   Reservation: 'Reservation',
   Building: 'Building',
-  ReservationComment: 'ReservationComment'
+  ReservationComment: 'ReservationComment',
+  EmailVerification: 'EmailVerification'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -82,7 +83,8 @@ export const UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   role: 'role',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  isEmailVerified: 'isEmailVerified'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -143,6 +145,18 @@ export const ReservationCommentScalarFieldEnum = {
 } as const
 
 export type ReservationCommentScalarFieldEnum = (typeof ReservationCommentScalarFieldEnum)[keyof typeof ReservationCommentScalarFieldEnum]
+
+
+export const EmailVerificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  codeHash: 'codeHash',
+  expiresAt: 'expiresAt',
+  used: 'used',
+  createdAt: 'createdAt'
+} as const
+
+export type EmailVerificationScalarFieldEnum = (typeof EmailVerificationScalarFieldEnum)[keyof typeof EmailVerificationScalarFieldEnum]
 
 
 export const SortOrder = {

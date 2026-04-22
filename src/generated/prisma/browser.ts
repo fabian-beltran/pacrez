@@ -42,3 +42,8 @@ export type Building = Prisma.BuildingModel
  * 
  */
 export type ReservationComment = Prisma.ReservationCommentModel
+/**
+ * Model EmailVerification
+ * 
+ */
+export type EmailVerification = Prisma.EmailVerificationModel
