@@ -1,6 +1,6 @@
 import ReservationModal from "@/components/ReservationModal";
 import { Building } from "@/lib/prisma-types";
-import { Button, Group, Modal, Paper, Stack, Text, UnstyledButton } from "@mantine/core";
+import { Group, Modal, Paper, Stack, Text, UnstyledButton } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
 const MapButton = ({

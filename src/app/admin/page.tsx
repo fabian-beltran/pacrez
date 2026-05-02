@@ -51,7 +51,7 @@ export default async function AdminPage() {
 			<Title ta="center" mb="sm">
 				Recent Reservations
 			</Title>
-			<ReservationsTable reservations={reservations} />
+			<ReservationsTable reservations={reservations} buildings={[]} />
 		</>
 	);
 }
