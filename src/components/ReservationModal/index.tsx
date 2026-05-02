@@ -12,7 +12,6 @@ import {
 	TextInput,
 	ActionIcon,
 	Accordion,
-	UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { DateTimePicker } from "@mantine/dates";
@@ -27,6 +26,7 @@ import { IconEye } from "@tabler/icons-react";
 import { useAuth } from "@/context/AuthContext";
 import { Building, Reservation, Room } from "@/lib/prisma-types";
 import { ReservationComments } from "./ReservationComments";
+import CancelReservationModal from "./CancelReservationModal";
 
 function getDefaultTimes() {
 	const now = new Date();
@@ -59,7 +59,8 @@ const ReservationModal = ({
 	const { start, end } = getDefaultTimes();
 	const router = useRouter();
 	const [opened, { open, close }] = useDisclosure(false, { onClose: () => !reservation && form.reset() });
-	const [isPending, startTransition] = useTransition();
+	const [isSubmitPending, startSubmitTransition] = useTransition();
+	const [isStatusPending, startStatusTransition] = useTransition();
 	const form = useForm<ReservationInput>({
 		initialValues: {
 			buildingName: "",
@@ -77,8 +78,8 @@ const ReservationModal = ({
 		validate: zod4Resolver(reservationSchema),
 	});
 
-	const handleSubmit = async (values: ReservationInput) => {
-		startTransition(async () => {
+	const handleSubmit = (values: ReservationInput) => {
+		startSubmitTransition(async () => {
 			try {
 				if (!reservation) {
 					await createReservation(values);
@@ -120,15 +121,17 @@ const ReservationModal = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [reservation?.id]);
 
-	const handleStatusChange = async (status: ReservationStatus) => {
-		if (!reservation) return;
-		try {
-			await updateReservationStatus(reservation.id, status);
-			router.refresh();
-			close();
-		} catch (error) {
-			console.error(error);
-		}
+	const handleStatusChange = (status: ReservationStatus) => {
+		startStatusTransition(async () => {
+			if (!reservation) return;
+			try {
+				await updateReservationStatus(reservation.id, status);
+				router.refresh();
+				close();
+			} catch (error) {
+				console.error(error);
+			}
+		});
 	};
 
 	return (
@@ -158,6 +161,7 @@ const ReservationModal = ({
 							}}
 							readOnly={!!reservation || !!selectedRoom}
 							styles={reservation || selectedRoom ? { input: { cursor: "not-allowed" } } : undefined}
+							disabled={reservation?.status === "CANCELLED"}
 						/>
 
 						<Autocomplete
@@ -167,7 +171,9 @@ const ReservationModal = ({
 								buildings.find((b) => b.name === form.values.buildingName)?.rooms.map((r) => r.name) ??
 								[]
 							}
-							disabled={!reservation && !form.values.buildingName}
+							disabled={
+								(!reservation && !form.values.buildingName) || reservation?.status === "CANCELLED"
+							}
 							{...form.getInputProps("roomName")}
 							readOnly={!!reservation || !!selectedRoom}
 							styles={reservation || selectedRoom ? { input: { cursor: "not-allowed" } } : undefined}
@@ -183,6 +189,7 @@ const ReservationModal = ({
 									format: "12h",
 								}}
 								{...form.getInputProps("startTime")}
+								disabled={reservation?.status === "CANCELLED"}
 							/>
 							<DateTimePicker
 								label="End Time"
@@ -193,6 +200,7 @@ const ReservationModal = ({
 									format: "12h",
 								}}
 								{...form.getInputProps("endTime")}
+								disabled={reservation?.status === "CANCELLED"}
 							/>
 						</Group>
 
@@ -201,17 +209,27 @@ const ReservationModal = ({
 							placeholder="Select a type"
 							data={reservationTypeOptions}
 							{...form.getInputProps("reservationType")}
+							disabled={reservation?.status === "CANCELLED"}
 						/>
 
 						<NumberInput
 							label="Anticipated Attendance"
 							min={1}
 							{...form.getInputProps("anticipatedAttendance")}
+							disabled={reservation?.status === "CANCELLED"}
 						/>
 
-						<Textarea label="Purpose" {...form.getInputProps("purpose")} />
+						<Textarea
+							label="Purpose"
+							{...form.getInputProps("purpose")}
+							disabled={reservation?.status === "CANCELLED"}
+						/>
 
-						<Textarea label="Supplies Needed" {...form.getInputProps("suppliesNeeded")} />
+						<Textarea
+							label="Supplies Needed"
+							{...form.getInputProps("suppliesNeeded")}
+							disabled={reservation?.status === "CANCELLED"}
+						/>
 
 						<Divider mt="xs" />
 
@@ -235,9 +253,18 @@ const ReservationModal = ({
 								</Group>
 							}
 							{...form.getInputProps("contactName")}
+							disabled={reservation?.status === "CANCELLED"}
 						/>
-						<TextInput label="Contact Email" {...form.getInputProps("contactEmail")} />
-						<TextInput label="Contact Phone Number" {...form.getInputProps("contactPhone")} />
+						<TextInput
+							label="Contact Email"
+							{...form.getInputProps("contactEmail")}
+							disabled={reservation?.status === "CANCELLED"}
+						/>
+						<TextInput
+							label="Contact Phone Number"
+							{...form.getInputProps("contactPhone")}
+							disabled={reservation?.status === "CANCELLED"}
+						/>
 					</Stack>
 
 					{reservation && (
@@ -256,22 +283,28 @@ const ReservationModal = ({
 							<Group gap="xs">
 								<Button
 									color="green"
+									size="xs"
 									onClick={() => handleStatusChange("APPROVED")}
 									disabled={reservation.status === "APPROVED"}
+									loading={isStatusPending}
 								>
 									Approve
 								</Button>
 								<Button
 									color="red"
+									size="xs"
 									onClick={() => handleStatusChange("DENIED")}
 									disabled={reservation.status === "DENIED"}
+									loading={isStatusPending}
 								>
 									Deny
 								</Button>
 								<Button
 									color="gray"
+									size="xs"
 									onClick={() => handleStatusChange("PENDING")}
 									disabled={reservation.status === "PENDING"}
+									loading={isStatusPending}
 								>
 									Pending
 								</Button>
@@ -279,7 +312,19 @@ const ReservationModal = ({
 						)}
 
 						<Group>
-							<Button type="submit" loading={isPending}>
+							{reservation && reservation.status !== "CANCELLED" && (
+								<CancelReservationModal
+									reservation={reservation}
+									onCloseParent={close}
+									loading={isStatusPending}
+								/>
+							)}
+							<Button
+								type="submit"
+								loading={isSubmitPending}
+								size="xs"
+								disabled={reservation?.status === "CANCELLED"}
+							>
 								{reservation ? "Update" : "Create"}
 							</Button>
 						</Group>

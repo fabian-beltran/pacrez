@@ -31,12 +31,21 @@ export default async function AdminPage() {
 	);
 	const roomCount = await getRoomCount();
 
+	const now = new Date().getTime();
+	const in72Hours = now + 72 * 60 * 60 * 1000;
+
+	const upcomingReservations = reservations.filter((r) => {
+		if (!r.startTime) return false;
+		const time = new Date(r.startTime).getTime();
+		return time >= now && time <= in72Hours;
+	});
+
 	return (
 		<>
 			<SimpleGrid cols={{ base: 1, lg: 4 }} mb="lg">
 				<StatCard label="Pending Reservations" value={pendingReservations.length.toString()} />
 				<StatCard label="Approved Today" value={approvedToday.length.toString()} />
-				<StatCard label="Upcoming Reservations" value="##" />
+				<StatCard label="Upcoming Reservations" value={upcomingReservations.length.toString()} />
 				<StatCard label="Total Rooms" value={roomCount.toString()} />
 			</SimpleGrid>
 			<Title ta="center" mb="sm">

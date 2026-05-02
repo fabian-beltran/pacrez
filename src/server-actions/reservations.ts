@@ -121,7 +121,10 @@ export const updateReservation = async (
 		throw new Error("Reservation not found.");
 	}
 
-	if (existingReservation.userId !== user.id && user.role !== "ADMIN") {
+	if (
+		(existingReservation.userId !== user.id && user.role !== "ADMIN") ||
+		(existingReservation.status === "CANCELLED" && user.role !== "ADMIN")
+	) {
 		throw new Error("Unauthorized.");
 	}
 
@@ -170,7 +173,7 @@ export const updateReservation = async (
 
 export const updateReservationStatus = async (reservationId: string, status: ReservationStatus) => {
 	const user = await requireUser();
-	if (user.role !== "ADMIN") throw new Error("Unauthorized.");
+	if (user.role !== "ADMIN" && ["APPROVED,DENIED", "PENDING"].includes(status)) throw new Error("Unauthorized.");
 
 	const updatedReservation = await prisma.reservation.update({
 		where: { id: reservationId },
@@ -193,10 +196,13 @@ export const updateReservationStatus = async (reservationId: string, status: Res
 
 		if (status === "APPROVED") {
 			// eslint-disable-next-line quotes
-			message = `<p>Your reservation has been <strong style="color:green;">approved</strong>.</p>`;
+			message = `<p>Your reservation has been <strong style="color:green;">APPROVED</strong>.</p>`;
 		} else if (status === "DENIED") {
 			// eslint-disable-next-line quotes
-			message = `<p>Your reservation has been <strong style="color:red;">denied</strong>.</p>`;
+			message = `<p>Your reservation has been <strong style="color:red;">DENIED</strong>.</p>`;
+		} else if (status === "CANCELLED") {
+			// eslint-disable-next-line quotes
+			message = `<p>Your reservation has been <strong>CANCELLED</strong>.</p>`;
 		} else {
 			message = `<p>Your reservation status has been updated to <strong>${status}</strong>.</p>`;
 		}
