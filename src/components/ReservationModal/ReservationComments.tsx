@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button, Textarea, Stack, Group, Text, Divider, ActionIcon } from "@mantine/core";
 import { IconArrowBackUp } from "@tabler/icons-react";
 import { createReservationComment } from "@/server-actions/reservations";
-import { Reservation, ReservationComment } from "@/lib/prisma-types";
+import { Reservation, ReservationComment, ReservationCommentReply } from "@/lib/prisma-types";
 import { useAuth } from "@/context/AuthContext";
 
 interface Props {
@@ -33,7 +33,7 @@ export const ReservationComments = ({ reservation, refresh }: Props) => {
 		}
 	};
 
-	const renderComment = (comment: ReservationComment, level = 0) => (
+	const renderComment = (comment: ReservationComment | ReservationCommentReply, level = 0) => (
 		<Stack key={comment.id} ml={level * 20} gap={0}>
 			<Group justify="space-between">
 				<Text fw={500}>
@@ -46,7 +46,7 @@ export const ReservationComments = ({ reservation, refresh }: Props) => {
 				)}
 			</Group>
 			<Text>{comment.content}</Text>
-			{comment.replies?.map((reply) => renderComment(reply, level + 1))}
+			{"replies" in comment && comment.replies?.map((reply) => renderComment(reply, level + 1))}
 		</Stack>
 	);
 

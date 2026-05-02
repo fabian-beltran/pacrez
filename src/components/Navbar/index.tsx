@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 const Navbar = () => {
 	const user = useAuth();
 
-	const loggedInButtons = user && user.isEmailVerified && (
+	const loggedInButtons = user && (
 		<>
 			<NavButton label="Reservations" icon={<IconList />} href="/reservations" />
 			<NavButton label="Campus Map" icon={<IconMap />} href="/map" />

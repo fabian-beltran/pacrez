@@ -24,6 +24,7 @@ export default function VerifyEmailForm() {
 
 				setSuccess(true);
 				setTimeout(() => {
+					router.refresh();
 					router.push("/reservations");
 				}, 800);
 			} catch (error) {

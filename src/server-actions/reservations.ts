@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { ReservationInput } from "@/lib/schemas/reservations";
 import { requireUser } from "./auth";
 import { sendEmail } from "@/lib/email";
+import { Reservation } from "@/lib/prisma-types";
 
 export const createReservation = async ({
 	roomName,
@@ -85,6 +86,7 @@ export const getReservations = async (all?: boolean) => {
 	const reservations = await prisma.reservation.findMany({
 		where: { userId: all && user.role === "ADMIN" ? undefined : user.id },
 		include: {
+			user: true,
 			room: { include: { building: true } },
 			comments: { include: { user: true, replies: { include: { user: true } } } },
 		},
